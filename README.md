@@ -10,4 +10,11 @@ create a credentials.json file, put your credentials there :
   "password": "12345678"
 }
 ```
+then execute the following command to install dependencies and run script respectively:
 
+```
+npm install
+
+node linkedin.js
+
+```
