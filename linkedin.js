@@ -8,8 +8,10 @@ let tabWillBeOpenedPromise = tab.get(
   "https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin"
 );
 
-let company = "uber";
+let company = "ibm";
 let maxPages = 2;
+let maxRequests = 5;
+let requestCount = 0;
 let profilesUrls = [];
 let myMessage = "Your profile looks impressive";
 
@@ -55,6 +57,7 @@ tabWillBeOpenedPromise
     for (let index = 0; index < profilesUrls.length; index++) {
       await sendConnection(profilesUrls[index]);
       await tab.sleep(1000);
+      if (requestCount >= maxRequests) break;
     }
 
     return undefined;
@@ -128,6 +131,7 @@ async function sendConnection(url) {
               let done = await doneP;
               await done.click();
               await tab;
+              requestCount++;
               resolve();
             })
             .catch((err) => {
