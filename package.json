@@ -1,15 +1,15 @@
 {
-  "name": "linkedin",
+  "name": "lec_8_automation",
   "version": "1.0.0",
   "description": "",
-  "main": "linkedin.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "selenium": "^2.20.0"
+    "chromedriver": "^83.0.0",
+    "selenium-webdriver": "^4.0.0-alpha.7"
   }
 }
