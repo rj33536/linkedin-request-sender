@@ -8,17 +8,19 @@ let tabWillBeOpenedPromise = tab.get(
   "https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin"
 );
 
-let company = "ibm";
+let company = "Microsoft";
 let maxPages = 2;
-let maxRequests = 5;
+let maxRequests = 50;
 let requestCount = 0;
 let profilesUrls = [];
-let myMessage = "Your profile looks impressive";
+let myMessage = `
+Hi Sir, I am Rohit Jain. I'm a final year undergrad at NSUT(East campus). Glad to connect with you.
+`;
 
 tabWillBeOpenedPromise
   .then(function () {
     let findTimeOut = tab.manage().setTimeouts({
-      implicit: 10000,
+      implicit: 1000000,
     });
     return findTimeOut;
   })
@@ -31,13 +33,11 @@ tabWillBeOpenedPromise
           "&origin=FACETED_SEARCH&page=" +
           i
       );
-
-      await tab.executeScript("window.scroll(0,1000)");
-
+      
       await tab.sleep(1000);
       await tab;
       let people = await tab.findElements(
-        swd.By.css("a[data-control-name='search_srp_result']")
+        swd.By.css(".entity-result__title-text")
       );
 
       let count = 0;
@@ -45,7 +45,10 @@ tabWillBeOpenedPromise
       console.log(people.length);
 
       for (let index = 0; index < people.length; index++) {
-        let element = people[index];
+        let element = people[index].findElement(
+          swd.By.css("a")
+        );
+          debugger;
         let profileUrl = await (await element).getAttribute("href");
         if (count % 2 == 0) profilesUrls.push(profileUrl);
         count++;
@@ -53,7 +56,6 @@ tabWillBeOpenedPromise
     }
     console.log(profilesUrls);
 
-    // profilesUrls = ["https://www.linkedin.com/in/arzoo-hudda-122162167/"];
     for (let index = 0; index < profilesUrls.length; index++) {
       await sendConnection(profilesUrls[index]);
       await tab.sleep(1000);
@@ -74,7 +76,7 @@ async function login() {
 
     let inputUserBox = pArr[0];
     let inputPassBox = pArr[1];
-    let inputUserBoxWillBeFilledP = inputUserBox.sendKeys("rj33536@gmail.com");
+    let inputUserBoxWillBeFilledP = inputUserBox.sendKeys(username);
     let inputPassBoxWillBeFilledP = inputPassBox.sendKeys(password);
 
     let willBeFilledArr = await Promise.all([
@@ -126,7 +128,7 @@ async function sendConnection(url) {
 
               await messageBox.sendKeys("Hi " + name + ", " + myMessage);
               let doneP = (await tab).findElement(
-                swd.By.css("button[aria-label='Done']")
+                swd.By.css("button[aria-label='Send now']")
               );
               let done = await doneP;
               await done.click();
